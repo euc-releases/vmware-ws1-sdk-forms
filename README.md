@@ -1,5 +1,5 @@
 # vmware-ws1-sdk-forms
-# **vm**ware Workspace ONE SDK for Xamarin.Forms
+# **VM**ware Workspace ONE SDK for Xamarin.Forms
 
 This documentation will cover the [installation](#installation), [setup](#setup) and [usage](#usage) of the **vm**ware Workspace ONE SDK for Xamarin Forms.
 
@@ -192,19 +192,11 @@ For example:
                     global::Android.Util.Log.Debug(this.GetType().ToString(), "ctor(IntPtr, JniHandleOwnership)");
                 }
 
-                private WeakReference<Intent> _mainIntent;
                 public override Intent MainActivityIntent
                 {
                     get
                     {
-                        global::Android.Util.Log.Debug(this.GetType().ToString(), "GetMainActivityIntent()");
-                        if (_mainIntent == null || !_mainIntent.TryGetTarget(out var mainIntent))
-                        {
-                            mainIntent = new Intent(AwAppContext, typeof(MainActivity));
-                            mainIntent.AddFlags(ActivityFlags.NewTask);
-                            _mainIntent = new WeakReference<Intent>(mainIntent);
-                        }
-                        return mainIntent;
+                        return new Intent(AwAppContext, typeof(MainActivity));
                     }
                 }
 
