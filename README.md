@@ -1,9 +1,8 @@
-# vmware-ws1-sdk-forms
 # **VM**ware Workspace ONE SDK for Xamarin.Forms
 
 This documentation will cover the [installation](#installation), [setup](#setup) and [usage](#usage) of the **vm**ware Workspace ONE SDK for Xamarin Forms.
 
-<small>WorkspaceOne SDK for Xamarin Forms is dependent on AWSDK version 1.5.0 or higher.</small>
+<small>WorkspaceOne SDK for Xamarin Forms is dependent on [AWSDK](https://www.nuget.org/packages/AWSDK/) version 1.5.0 or higher.Please find the [Prerequisites](https://github.com/vmwareairwatchsdk/Xamarin-AWSDK/blob/master/GettingStarted.md) for using the WS1 Forms SDK </small>
 
 ## Installation
 
