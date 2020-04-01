@@ -152,6 +152,11 @@
     <Folder Include="Resources\drawable-xxxhdpi\" />
     <Folder Include="Renderers\" />
   </ItemGroup>
+  <Target Name="RemoveExtraMultidex" AfterTargets="_DetermineJavaLibrariesToCompile">
+    <ItemGroup>
+      <_JavaLibrariesToCompileForApp Remove="**\*multidex-1.0.1.jar" />
+    </ItemGroup>
+  </Target>
   <ItemGroup>
     <ProjectReference Include="..\WorkspaceOne.Example\WorkspaceOne.Example.csproj">
       <Project>{99699314-203C-4439-80D2-BF04443B8C23}</Project>
