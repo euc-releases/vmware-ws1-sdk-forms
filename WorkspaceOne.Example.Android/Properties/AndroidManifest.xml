@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android" android:versionName="1.0.1" package="com.vmware-airwatch-sdk.forms" android:versionCode="2">
-	<uses-sdk android:minSdkVersion="21" android:targetSdkVersion="28" />
-	<application android:label="WorkspaceOne.Example.Android">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android" xmlns:tools="http://schemas.android.com/tools" android:versionName="2.0.0" package="com.vmware-airwatch-sdk.forms" android:versionCode="2">
+	<uses-sdk android:minSdkVersion="21" android:targetSdkVersion="29" />
+	<application android:name="WorkspaceOne.Example.Android" tools:replace="android:label,android:allowBackup" android:allowBackup="false" android:label="WorkspaceOne.Example.Android" android:debuggable="false">
 		<receiver android:name="com.airwatch.sdk.AirWatchSDKBroadcastReceiver" android:permission="com.airwatch.sdk.BROADCAST">
 			<intent-filter>
 				<action android:name="com.vmware.buildtest.airwatchsdk.BROADCAST" />
@@ -15,6 +15,11 @@
 				<data android:scheme="package" />
 			</intent-filter>
 		</receiver>
+		<service android:name=".FirebaseInstanceIDService" android:stopWithTask="false">
+			<intent-filter>
+				<action android:name="com.google.firebase.MESSAGING_EVENT" />
+			</intent-filter>
+		</service>
 		<activity android:name="com.airwatch.gateway.ui.GatewaySplashActivity" android:label="@string/app_name">
 			<intent-filter>
 				<action android:name="android.intent.action.MAIN" />
