@@ -1,8 +1,8 @@
-# **VM**ware Workspace ONE SDK for Xamarin.Forms
+# **vm**ware Workspace ONE SDK for Xamarin.Forms
 
 This documentation will cover the [installation](#installation), [setup](#setup) and [usage](#usage) of the **vm**ware Workspace ONE SDK for Xamarin Forms.
 
-<small>WorkspaceOne SDK for Xamarin Forms is dependent on [AWSDK](https://www.nuget.org/packages/AWSDK/) version 1.5.0 or higher.Please find the [Prerequisites](https://github.com/vmwareairwatchsdk/Xamarin-AWSDK/blob/master/GettingStarted.md) for using the WS1 Forms SDK </small>
+<small>WorkspaceOne SDK for Xamarin Forms is dependent on [AWSDK](https://www.nuget.org/packages/AWSDK/) version 2.0.0 or higher.Please find the [Prerequisites](https://github.com/vmwareairwatchsdk/Xamarin-AWSDK/blob/master/GettingStarted.md) for using the WS1 Forms SDK </small>
 
 ## Installation
 
@@ -16,7 +16,12 @@ Add the appropriate packages to your solution for each app project. Then continu
 
 ## Setup
 
-Before using the Workspace ONE SDK, just like many other Xamarin Forms packages it's dependencies need to be initialized first. In addition to adding the Forms package, each target platform needs to add the SDKs package for that specific platform as well. If you target only one of the two supported platforms, skip all steps for the one you don't support.
+Before using the Workspace ONE SDK, just like many other Xamarin Forms packages it's dependencies need to be initialized first. In addition to adding the Forms package, each target platform needs to add the SDKs package for that specific platform as well. If you target only one of the two supported platforms, skip all steps for the one you don't support. 
+For Android platform along with Workspace SDK Forms package, add the below packages if not already present
+1. Xamarin.AndroidX.Legacy.Support.V4
+2. Xamarin.AndroidX.Browser
+3. Xamarin.GooglePlayServices.Base
+4. Xamarin.GooglePlayServices.Safetynet
 
 ### iOS
 ## Procedure
@@ -30,10 +35,34 @@ For example like this:
 
         WorkspaceOne.iOS.WorkspaceOne.Init("wsoexample");//Replace "wsoexample" with the name of your iOS app url scheme
 
+        //APNS Registeration
+        if (UIDevice.CurrentDevice.CheckSystemVersion(10, 0))
+        {
+            UNUserNotificationCenter.Current.RequestAuthorization(UNAuthorizationOptions.Alert | UNAuthorizationOptions.Badge | UNAuthorizationOptions.Sound,
+                                                                               (granted, error) =>
+                            InvokeOnMainThread(UIApplication.SharedApplication.RegisterForRemoteNotifications));
+        }
+        else if (UIDevice.CurrentDevice.CheckSystemVersion (8, 0)) 
+        {
+            var pushSettings = UIUserNotificationSettings.GetSettingsForTypes(
+                        UIUserNotificationType.Alert | UIUserNotificationType.Badge | UIUserNotificationType.Sound,
+                        new NSSet());
+
+            UIApplication.SharedApplication.RegisterUserNotificationSettings(pushSettings);
+            UIApplication.SharedApplication.RegisterForRemoteNotifications();
+        } 
+        else
+        {
+            UIRemoteNotificationType notificationTypes = UIRemoteNotificationType.Alert | UIRemoteNotificationType.Badge | UIRemoteNotificationType.Sound;
+            UIApplication.SharedApplication.RegisterForRemoteNotificationTypes(notificationTypes);
+        }
         LoadApplication(new App());
 
         return base.FinishedLaunching(app, options);
     }
+    
+    
+    
 
 Replace *"wsoexample"* with the name of your iOS app url scheme. See [the documentation for the WorkspaceOne SDK for iOS](https://docs.vmware.com/en/VMware-Workspace-ONE-UEM/services/VMware-Workspace-ONE-SDK-for-iOS-(Swift)/GUID-AWT-INITIALIZESDK.html#GUID-AWT-INITIALIZESDK) about details for the app url scheme.
 
@@ -55,7 +84,27 @@ Code for Handling Open Url
         return WorkspaceOne.iOS.WorkspaceOne.HandleOpenUrl(url, "");
     }
 
+4. Implement Remote Notification Delegate callbacks and register the APNS token with SDK.
 
+Code for token registeration with SDK
+
+    //Delegate callbacks for Remote Notification
+    public override void RegisteredForRemoteNotifications(UIApplication application, NSData deviceToken)
+    {
+        System.Diagnostics.Debug.WriteLine("Token: {0}", deviceToken.ToString());
+        byte[] result = new byte[deviceToken.Length];
+        Marshal.Copy(deviceToken.Bytes, result, 0, (int)deviceToken.Length);
+        var token = BitConverter.ToString(result).Replace("-", ""); //Remove "-" character from token string
+        System.Diagnostics.Debug.WriteLine("Token: {0}", token);
+        WorkspaceOne.iOS.WorkspaceOne.regisgterToken(token); //Register for Push Notification with SDK
+    }
+        
+    //Delegate callback for Remote Notification Failure
+    public override void FailedToRegisterForRemoteNotifications(UIApplication application, NSError error)
+    {
+        System.Diagnostics.Debug.WriteLine("Token Error: {0}", error.ToString());
+    }
+    
 ### Android
 
 1. In the `MainActivity.cs`'s `OnCreate` (where most other packages get initialized as well) add the following code `WorkspaceOne.Android.WorkspaceOne.Instance.Init(this);` and `WorkspaceOne.Android.WorkspaceOne.Instance.OnCreate(savedInstanceState)`. 
@@ -208,6 +257,37 @@ For example:
             
             }
         }
+        
+
+5. For Firebase Cloud Message support complete the  FCM Integration as per Firebase Console and then add following code.
+
+        [Service]
+        [IntentFilter(new[] { "com.google.firebase.INSTANCE_ID_EVENT" })]
+        public class FirebaseInstanceIDService: FirebaseMessagingService
+        {
+          
+            public override void OnNewToken(string p0)
+            {
+                System.Console.WriteLine(p0);
+                base.OnNewToken(p0);
+               
+                WorkspaceOne.Android.WorkspaceOne.regisgterToken(p0);
+
+            }
+
+            public override void OnMessageReceived(RemoteMessage p0)
+            {
+                base.OnMessageReceived(p0);
+
+                var notification = p0.GetNotification();
+                if (notification != null)
+                {
+                    WorkspaceOne.Android.WorkspaceOne.processMessage(notification.Title, notification.Body, null);
+                }
+            }
+        }
+        
+        
 ### Forms
 
 Wherever reasonable in your Xamarin.Forms app when you would like to set up the SDK, get an instance of the `IWorkspaceOne` service and assign the delegate property. This can be done in your `App.xaml.cs` for example.
@@ -225,10 +305,10 @@ Contructor code
 
     public App()
     {
-            InitializeComponent(); 
-            var ws = DependencyService.Get<IWorkspaceOne>();
-            ws.FormsDelegate = this;
-            MainPage = new NavigationPage(new MainPage());
+        InitializeComponent(); 
+        var ws = DependencyService.Get<IWorkspaceOne>();
+        ws.FormsDelegate = this;
+        MainPage = new NavigationPage(new MainPage());
     }
 
 3. Make sure the instance of the class you assign as the delegate implements `IAWSDKDelegate`.
@@ -296,6 +376,12 @@ To encrypt custom data and to secure storage data, use the data encryption API s
 
 Note that the data is not stored by SDK by default, App needs to handle the storage by itself.
 
+### Send Log to Console
+    var wso = DependencyService.Get<IWorkspaceOne>().SharedInstance;
+    var not = wso != null ? "not" : "";
+    Debug.WriteLine($"[{this.GetType()}] wso is {not} null");
+    wso?.sendLogs();
+    
 ### DLP on iOS
 
 On iOS, to enable the WSOne SDK app with DLP restrictions follow the below instructions:
