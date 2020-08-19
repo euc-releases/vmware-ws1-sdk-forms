@@ -1,7 +1,9 @@
 ﻿using System;
+using System.Runtime.InteropServices;
 using Foundation;
 using UIKit;
-
+using UserNotifications;
+using WorkspaceOne.Forms.Interfaces;
 namespace WorkspaceOne.Example.iOS
 {
     // The UIApplicationDelegate for the application. This class is responsible for launching the 
@@ -39,9 +41,26 @@ namespace WorkspaceOne.Example.iOS
                 workspaceOneException = e;
             }
 
+            if (UIDevice.CurrentDevice.CheckSystemVersion(10, 0))
+            {
+                UNUserNotificationCenter.Current.RequestAuthorization(UNAuthorizationOptions.Alert | UNAuthorizationOptions.Badge | UNAuthorizationOptions.Sound,
+                                                                        (granted, error) =>
+                        InvokeOnMainThread(UIApplication.SharedApplication.RegisterForRemoteNotifications));
+            }
+            else if (UIDevice.CurrentDevice.CheckSystemVersion(8, 0))
+            {
+                var pushSettings = UIUserNotificationSettings.GetSettingsForTypes(
+                UIUserNotificationType.Alert | UIUserNotificationType.Badge | UIUserNotificationType.Sound,
+                new NSSet());
 
-
-           
+                UIApplication.SharedApplication.RegisterUserNotificationSettings(pushSettings);
+                UIApplication.SharedApplication.RegisterForRemoteNotifications();
+            }
+            else
+            {
+                UIRemoteNotificationType notificationTypes = UIRemoteNotificationType.Alert | UIRemoteNotificationType.Badge | UIRemoteNotificationType.Sound;
+                UIApplication.SharedApplication.RegisterForRemoteNotificationTypes(notificationTypes);
+            }
 
             LoadApplication(new App());
 
@@ -54,12 +73,27 @@ namespace WorkspaceOne.Example.iOS
 
         public override void OnActivated(UIApplication uiApplication)
         {
-            //WorkspaceOne.iOS.WorkspaceOne.OnActivated();
+            WorkspaceOne.iOS.WorkspaceOne.OnActivated();
         }
 
         public override bool HandleOpenURL(UIApplication application, NSUrl url)
         {
             return WorkspaceOne.iOS.WorkspaceOne.HandleOpenUrl(url, "");
+        }
+
+        public override void RegisteredForRemoteNotifications(UIApplication application, NSData deviceToken)
+        {
+            System.Diagnostics.Debug.WriteLine("Token: {0}", deviceToken.ToString());
+            byte[] result = new byte[deviceToken.Length];
+            Marshal.Copy(deviceToken.Bytes, result, 0, (int)deviceToken.Length);
+            var token = BitConverter.ToString(result).Replace("-", ""); //Remove "-" character from token string
+            System.Diagnostics.Debug.WriteLine("Token: {0}", token);
+            WorkspaceOne.iOS.WorkspaceOne.regisgterToken(token); //Register for Push Notification with SDK
+        }
+
+        public override void FailedToRegisterForRemoteNotifications(UIApplication application, NSError error)
+        {
+            System.Diagnostics.Debug.WriteLine("Token Error: {0}", error.ToString());
         }
     }
 }

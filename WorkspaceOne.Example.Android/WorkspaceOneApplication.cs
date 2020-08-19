@@ -26,8 +26,7 @@ namespace WorkspaceOne.Example.Droid
 
         public override void OnCreate()
         {
-            System.Diagnostics.Debug.WriteLine($"{this.GetType()} OnCreate()");
-            AWSDKDelegate.OnCreate(this);
+            base.OnCreate(this);
         }
     }
 }

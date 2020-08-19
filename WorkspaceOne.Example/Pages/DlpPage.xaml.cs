@@ -27,7 +27,7 @@ namespace WorkspaceOne.Example.Pages
 
             App.ProfilesReceived += HandleProfilesReceived;
 
-            HandleProfilesReceived(null, null);
+           HandleProfilesReceived(null, null);
         }
 
         private void HandleProfilesReceived(object sender, EventArgs e)
@@ -35,17 +35,28 @@ namespace WorkspaceOne.Example.Pages
             try
             {
                 Debug.WriteLine($"[{this.GetType()}] HandleProfilesReceived(object sender, EventArgs e  1)");
+             
                 var restrictionPayload = App.Profiles.FirstOrDefault(p => p.ProfileType == AWProfileType.SDKProfile)?.RestrictionsPayload;
-                Debug.WriteLine($"[{this.GetType()}] HandleProfilesReceived(object sender, EventArgs e  2)");
-
-                Items = new ObservableCollection<string>
+                if (restrictionPayload != null)
                 {
-                    $"Allow Camera: {restrictionPayload.EnableCameraAccess}",
-                    $"Prevent Copy/Cut: {restrictionPayload.PreventCopyAndCut}",
-                    $"Allow Open In: {restrictionPayload.AllowedApplications.Count().ToString()}",
-                    $"Enable Watermark: {restrictionPayload.EnableWatermark}",
-                    $"Open PDF"
-                };
+                    Debug.WriteLine($"[{this.GetType()}] HandleProfilesReceived(object sender, EventArgs e  2)");
+
+                    Items = new ObservableCollection<string>
+                    {
+                        $"Allow Camera: {restrictionPayload.EnableCameraAccess}",
+                        $"Allow Copy/Paste Into: {restrictionPayload.EnableCopyAndPasteInTo}",
+                        $"Allow Copy/Paste Out: {restrictionPayload.EnableCopyAndPasteOut}",
+                        $"Allow Open In: {restrictionPayload.AllowedApplications.Count().ToString()}",
+                        $"Enable Watermark: {restrictionPayload.EnableWatermark}",
+                        $"Open PDF"
+                    };
+                }
+                else
+                {
+                    Info.Text = "Restriction Payload is Null, Kindly configure Restriction Payload";
+                }
+       
+                
             }
             catch (ArgumentNullException)
             {

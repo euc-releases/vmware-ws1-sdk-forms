@@ -16,7 +16,7 @@
                 </DataTemplate>
             </ListView.ItemTemplate>
         </ListView>
-        <Label IsVisible="{Binding Items, Converter={StaticResource listToBool}, ConverterParameter=1}" AbsoluteLayout.LayoutBounds="0,0,1,1" AbsoluteLayout.LayoutFlags="All" HorizontalOptions="CenterAndExpand" VerticalOptions="CenterAndExpand" Text="No DLP data received yet..." HorizontalTextAlignment="Center" VerticalTextAlignment="Center" />
+        <Label x:Name="Info" IsVisible="{Binding Items, Converter={StaticResource listToBool}, ConverterParameter=1}" AbsoluteLayout.LayoutBounds="0,0,1,1" AbsoluteLayout.LayoutFlags="All" HorizontalOptions="CenterAndExpand" VerticalOptions="CenterAndExpand" Text="No DLP data received yet..." HorizontalTextAlignment="Center" VerticalTextAlignment="Center" />
     </StackLayout>
     </AbsoluteLayout>
         

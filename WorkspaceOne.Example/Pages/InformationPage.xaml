@@ -1,8 +1,17 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="UTF-8"?>
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
 			 xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+			 xmlns:d="http://xamarin.com/schemas/2014/forms/design"
+			 xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+			 mc:Ignorable="d"
 			 x:Class="WorkspaceOne.Example.Pages.InformationPage"
 			 Title="Information">
+	<StackLayout VerticalOptions="CenterAndExpand"
+					 HorizontalOptions="Fill">
+		<Button Text="Send Error Logs" Clicked="OnSendError"/>
+		<Button Text="Send Info Logs" Clicked="OnSendInfo"/>
+		<Button Text="Send Verbose Logs" Clicked="OnSendVerbose"/>
+		<Button Text="Send Warning Logs" Clicked="OnSendWarning"/>
 	<ListView x:Name="MyListView"
 			  ItemsSource="{Binding Items}"
 			  CachingStrategy="RecycleElement">
@@ -12,4 +21,5 @@
 			</DataTemplate>
 		</ListView.ItemTemplate>
 	</ListView>
+		</StackLayout>
 </ContentPage>
