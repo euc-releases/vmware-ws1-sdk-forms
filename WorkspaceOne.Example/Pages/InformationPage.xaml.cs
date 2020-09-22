@@ -35,8 +35,8 @@ namespace WorkspaceOne.Example.Pages
 
                 $"SDK Version: {wso?.SdkVersion ?? string.Empty}",
                 $"Server URL: {wso?.DeviceServicesUrl ?? string.Empty}",
-                //$"Group ID: {wso?.Account?.ActivationCode ?? string.Empty}",
-                //$"Username: {wso?.Account?.Username ?? string.Empty}"
+                $"Group ID: {wso?.GroupId ?? string.Empty}",
+                $"Username: {wso?.EnrollmentUserName ?? string.Empty}"
             };
 
             MyListView.ItemsSource = Items;
