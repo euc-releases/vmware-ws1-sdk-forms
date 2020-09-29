@@ -1,16 +1,16 @@
-# **vm**ware Workspace ONE SDK for Xamarin.Forms
+# **VM**ware Workspace ONE SDK for Xamarin.Forms
 
-This documentation will cover the [installation](#installation), [setup](#setup) and [usage](#usage) of the **vm**ware Workspace ONE SDK for Xamarin Forms.
+This documentation will cover the [installation](#installation), [setup](#setup) and [usage](#usage) of the **VM**ware Workspace ONE SDK for Xamarin Forms.
 
 <small>WorkspaceOne SDK for Xamarin Forms is dependent on [AWSDK](https://www.nuget.org/packages/AWSDK/) version 2.0.0 or higher.Please find the [Prerequisites](https://github.com/vmwareairwatchsdk/Xamarin-AWSDK/blob/master/GettingStarted.md) for using the WS1 Forms SDK </small>
 
 ## Installation
 
-The SDK should be installed using **Nuget**.
+The SDK should be installed using **Nuget** package manager.
 
-- **WorkspaceOne.Forms**: This is the package to be used in your Xamarin Forms app. It will provide interfaces for the initialization, setup and usage of the Workspace ONE module from your Xamarin Forms app.
+- **WorkspaceOne.Forms** is the package to be added in the Xamarin Forms app to enable it with Workspace One SDK funtionalities.The package provides interfaces to initialize / setup and enable the WS1 SDK security features.
 
-Add this nuget package to your Xamarin.Forms project and to your iOS and Android project of the the Xamarin.Forms app as well.
+Add this package to your Xamarin.Forms project and to your iOS and Android project of the Xamarin.Forms app as well.
 
 Add the appropriate packages to your solution for each app project. Then continue to the [setup](#setup) step for [Android](#android) and [iOS](#ios).
 
@@ -18,10 +18,10 @@ Add the appropriate packages to your solution for each app project. Then continu
 
 Before using the Workspace ONE SDK, just like many other Xamarin Forms packages it's dependencies need to be initialized first. In addition to adding the Forms package, each target platform needs to add the SDKs package for that specific platform as well. If you target only one of the two supported platforms, skip all steps for the one you don't support. 
 For Android platform along with Workspace SDK Forms package, add the below packages if not already present
-1. Xamarin.AndroidX.Legacy.Support.V4
-2. Xamarin.AndroidX.Browser
-3. Xamarin.GooglePlayServices.Base
-4. Xamarin.GooglePlayServices.Safetynet
+1. Xamarin.AndroidX.Legacy.Support.V4 (v1.0.0.1)
+2. Xamarin.AndroidX.Browser (v1.0.0.1)
+3. Xamarin.GooglePlayServices.Base (v71.1610.x)
+4. Xamarin.GooglePlayServices.Safetynet (v71.1600.x)
 
 ### iOS
 ## Procedure
@@ -386,6 +386,7 @@ Note that the data is not stored by SDK by default, App needs to handle the stor
 
 On iOS, to enable the WSOne SDK app with DLP restrictions follow the below instructions:
 
+
 ## Procedure
 1. Create a bundle named AWSDKDefaults.
 
@@ -418,6 +419,56 @@ On iOS, to enable the WSOne SDK app with DLP restrictions follow the below instr
             DLP Enabled – The app opens in Workspace ONE Boxer.
             DLP Disabled – The app opens in the iOS Mail app.
 
+### Branding on iOS
+1. To enable branding on iOS Forms app, create the AWSDKDefaults and add AWSDKDefaultSettings.plist inside the AWSDKDefaults bundle as in above steps. 
+2. Add enteries as per below structure:
+            Root (Dictionary)
+            - Branding (Dictionary)
+                Colors (Dictionary)
+                    EnableBranding (Boolean = YES)
+                        PrimaryHighlight (Dictionary) 
+                        Red (Number = 238)
+                        Green (Number = 139) 
+                        Blue (Number = 48) 
+                        Alpha (Number = 255)
+                AppLogo_1x (String = logoFileName) 
+                AppLogo_2x (String = logoFileName) 
+                SplashLogo_1x (String = splashLogoFileName) 
+                SplashLogo_2x (String = splashLogoFileName)
+
+### Branding on Android
+Modify the styles.xml in the Android Project for static branding.
+Following is the snippet for styles.xml
+    
+    <?xml version="1.0" encoding="utf-8"?>
+    <resources>
+        <style name="SDKBaseTheme" parent="VisionTheme.DayNight">
+            <!-- Set theme colors from http://www.google.com/design/spec/style/color.html#color-color-palette -->
+            <!-- colorPrimary is used for the default action bar background -->
+            <item name="colorPrimary">#2196F3</item>
+            <!-- colorPrimaryDark is used for the status bar -->
+            <item name="colorPrimaryDark">#1976D2</item>
+            <!-- colorAccent is used as the default value for colorControlActivated
+             which is used to tint widgets -->
+            <item name="colorAccent">#FF4081</item>
+            <!-- You can also set colorControlNormal, colorControlActivated
+             colorControlHighlight and colorSwitchThumbNormal. -->
+            <item name="android:datePickerDialogTheme">@style/AppCompatDialogStyle</item>
+            <!-- Splash screen icon Branding change -->
+            <item name="splashLogo">@drawable/appicon</item>
+            <!-- Login screen icon Branding change -->
+            <item name="awsdkLoginBrandingIcon">@drawable/appicon</item>
+            <item name="awsdkApplicationColorPrimary">#FF4081</item>
+        </style>
+        <style name="AppTheme.NoActionBar">
+            <item name="windowActionBar">false</item>
+            <item name="windowNoTitle">true</item>
+        </style>
+        <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar"/>
+        <style name="AppTheme.PopupOverlay" parent="VisionTheme.DayNight"/>
+    </resources>
+    
+    
 ### Secure Preferences
 
 Use the secure storage API set of functions to store key value pairs in encrypted storage.
