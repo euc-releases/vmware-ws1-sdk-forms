@@ -422,6 +422,7 @@ On iOS, to enable the WSOne SDK app with DLP restrictions follow the below instr
 ### Branding on iOS
 1. To enable branding on iOS Forms app, create the AWSDKDefaults and add AWSDKDefaultSettings.plist inside the AWSDKDefaults bundle as in above steps. 
 2. Add enteries as per below structure:
+            
             Root (Dictionary)
             - Branding (Dictionary)
                 Colors (Dictionary)
