@@ -7,6 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using WorkspaceOne.Example.Model;
 using WorkspaceOne.Example.Pages;
+using WorkspaceOne.Forms.Interfaces;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
@@ -32,7 +33,8 @@ namespace WorkspaceOne.Example
                 new MainMenuItem("Remote Config", "'Push configurations and settings to the app'", "remote"),
                 new MainMenuItem("DLP", "'Data loss prevention capabilities'", "dlp"),
                 new MainMenuItem("Encryption", "'Data encryption and decryption'", "encryption"),
-                new MainMenuItem("UI Test Page", "DLP UI Tests Controls", "info")
+                new MainMenuItem("UI Test Page", "DLP UI Tests Controls", "info"),
+                new MainMenuItem("Prompt Update Credentials", "Prompt Update Credentials", "info")
             };
 
             ListView.ItemsSource = Items;
@@ -87,6 +89,13 @@ namespace WorkspaceOne.Example
                     case 7:
                         {
                             await Navigation.PushAsync(new UITestPage());
+                            break;
+                        }
+                    case 8:
+                        {
+
+                            var wso = DependencyService.Get<IWorkspaceOne>().SharedInstance;
+                            wso.promptAndUpdateUserCredentials();
                             break;
                         }
                     default:
