@@ -18,8 +18,8 @@ Add the appropriate packages to your solution for each app project. Then continu
 
 Before using the Workspace ONE SDK, just like many other Xamarin Forms packages it's dependencies need to be initialized first. In addition to adding the Forms package, each target platform needs to add the SDKs package for that specific platform as well. If you target only one of the two supported platforms, skip all steps for the one you don't support. 
 For Android platform along with Workspace SDK Forms package, add the below packages if not already present
-1. Xamarin.AndroidX.Legacy.Support.V4 (v1.0.0.1)
-2. Xamarin.AndroidX.Browser (v1.0.0.1)
+1. Xamarin.AndroidX.Legacy.Support.V4 (v1.0.0.2)
+2. Xamarin.AndroidX.Browser (v1.2.0.2)
 3. Xamarin.GooglePlayServices.Base (v71.1610.x)
 4. Xamarin.GooglePlayServices.Safetynet (v71.1600.x)
 
