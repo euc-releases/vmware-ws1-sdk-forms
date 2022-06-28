@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android" xmlns:tools="http://schemas.android.com/tools" package="com.vmware-airwatch-sdk.forms" android:versionCode="2" android:versionName="22.1.0">
-	<uses-sdk android:minSdkVersion="21" android:targetSdkVersion="29" />
+<manifest xmlns:android="http://schemas.android.com/apk/res/android" xmlns:tools="http://schemas.android.com/tools" package="com.vmware-airwatch-sdk.forms" android:versionCode="225" android:versionName="22.5.0">
+	<uses-sdk android:minSdkVersion="21" android:targetSdkVersion="30" />
 	<application android:name="WorkspaceOne.Example.Android" tools:replace="android:label,android:allowBackup" android:allowBackup="false" android:label="WorkspaceOne.Example.Android" android:debuggable="false">
 		<receiver android:name="com.airwatch.sdk.AirWatchSDKBroadcastReceiver" android:permission="com.airwatch.sdk.BROADCAST">
 			<intent-filter>
